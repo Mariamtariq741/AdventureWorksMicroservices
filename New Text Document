@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building application...'
+                // Add build commands, e.g., npm install, mvn build, etc.
+                sh 'echo Building the project...'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+                // Build Docker image
+                sh '''
+                docker build -t my-app:latest .
+                '''
+            }
+        }
+
+        stage('Deploy to Staging') {
+            steps {
+                echo 'Deploying to staging...'
+                // Deploy commands (e.g., docker-compose up)
+                sh '''
+                docker run -d --name staging-app -p 8080:8080 my-app:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
